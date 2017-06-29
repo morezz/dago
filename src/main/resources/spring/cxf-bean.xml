@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://cxf.apache.org/jaxrs
+       http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+    <jaxrs:server id="restApiV1" address="/v1">
+        <jaxrs:serviceBeans>
+            <ref bean="kind"/>
+            <ref bean="order"/>
+            <ref bean="userInfo"/>
+            <ref bean="orderItem"/>
+            <ref bean="productInfo"/>
+            <ref bean="stock"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jsonProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+    <!-- invoker-->
+
+    <!-- provider beans-->
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider"/>
+    <!-- resource beans-->
+    <bean id="kind" class="dago.resource.impl.KindResourceImpl"/>
+    <bean id="order" class="dago.resource.impl.OrderResourceImpl"/>
+    <bean id="userInfo" class="dago.resource.impl.UserInfoResourceImpl"/>
+    <bean id="orderItem" class="dago.resource.impl.OrderItemResourceImpl"/>
+    <bean id="productInfo" class="dago.resource.impl.ProductInfoResourceImpl"/>
+    <bean id="stock" class="dago.resource.impl.StockResourceImpl"/>
+</beans>
