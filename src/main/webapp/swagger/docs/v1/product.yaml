@@ -1,0 +1,171 @@
+#  /product
+createProduct:
+  post:
+    summary: 创建商品信息
+    description: |
+      创建商品信息
+    parameters:
+      - name: body
+        in: body
+        description: 商品信息
+        required: true
+        schema:
+          $ref: '#/definitions/ProductForCreate'
+    tags:
+      -  Product
+    responses:
+      200:
+       description: 状态码和商品信息
+       schema:
+         $ref: '#/definitions/APIResult'
+
+searchProduct:
+  post:
+    summary: 批量查询商品
+    description: |
+      批量查询商品接口
+
+      参数:
+      - page - 查找的开始页索引, 不传取索引值0
+      - size - 查找的每页记录条数，不传取10
+      - conditions - 查询的过滤条件, 每个数组项为一个条件, 条件之间是 "与" 关系. 每个数组项均需要具备以下三个属性:
+
+      |id	|说明	|单/多值	|类型|
+      | ------------- | ------------- | -----------| -----------|
+      |name	|查找的属性名	|单值	|String|
+      |op	|匹配操作符, 一些操作符的取值 <br>eq: 相等 <br>neq: 不相等 <br>like: 模式匹配, 仅支持 '%' '_' 通配符, 即 SQL LIKE 的匹配方式 <br>in: 集合 IN, 此时操作数可以有多个, 属性值需要和其中任意一个相等| 单值|String|
+      |val|	匹配操作数|	操作相关|	属性相关|
+
+      - orders - 指定返回字段的顺序 (字段需要在库表中存在)
+      - sort - 排序参数
+      - returnAttrs - 返回属性
+
+    parameters:
+      - in: body
+        name: body
+        description: 搜索参数
+        required: true
+        schema:
+          $ref: '#/definitions/ProductSearch'
+    tags:
+      - Product
+    responses:
+      200:
+        description: 状态码和响应信息
+        schema:
+          $ref: '#/definitions/RespResult'
+
+
+
+
+
+definitions:
+  APIResult:
+    type: object
+    required:
+    - code
+    properties:
+      code:
+        type: integer
+        description: 返回码,0代表调用成功，更多的错误码描述，可以访问 /dict ，展示所有的错误码描述
+      message:
+        type: string
+        description: 错误描述信息
+      result:
+        type: object
+        description: 具体的返回数据，一个 json 对象
+
+
+  ProductForCreate:
+    type: object
+    required:
+    - code
+    properties:
+      name:
+        type: string
+        description: 名称
+      description:
+        type: string
+        description: 描述信息
+      price:
+        type: integer
+        description: 单价
+      model:
+        type: string
+        description: 型号
+      brand:
+        type: string
+        description: 品牌
+      masterPic:
+        type: string
+        description: 主图片
+      kindId:
+        type: integer
+        description: 类型
+      userId:
+        type: integer
+        description: 用户
+      code:
+        type: string
+        description: 商品编码
+      remark:
+        type: string
+        description: 备注
+
+  ProductSearch:
+    type: object
+    properties:
+      page:
+        type: integer
+        format: int32
+        default: 0
+        description: 页索引，不传取索引值0
+      size:
+        format: int32
+        default: 10
+        type: integer
+        description: 每页记录条数，不传取10
+      conditions:
+        type: array
+        description: 查询条件参数
+        items:
+          type: object
+          description: 查询条件
+          schema:
+            properties:
+              name:
+                type: string
+                description: 属性名称
+              op:
+                type: string
+                description: 操作符，可选eq, neq, in, like
+                enum:
+                  - eq
+                  - neq
+                  - in
+                  - like
+              val:
+                type: string
+                description: 属性值
+      order:
+        type: string
+        format: string
+        default: ""
+        description: 排序参数(字段需要在库表中存在)
+      sort:
+        type: string
+        format: string
+        default: ""
+        description: 排序参数
+      returnAttrs:
+        type: array
+        description: 返回属性数组
+        items:
+          type: string
+          description: 返回属性
+
+
+
+
+
+

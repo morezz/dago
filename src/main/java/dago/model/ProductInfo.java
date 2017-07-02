@@ -27,7 +27,7 @@ public class ProductInfo {
     @Column(name = "description")
     private String description;
     @Column(name = "price")
-    private Long price;
+    private Double price;
     @Column(name = "created_timestamp")
     private Date createTime = new Date();
     @Column(name = "last_modified_timestamp")
@@ -72,11 +72,11 @@ public class ProductInfo {
         this.description = description;
     }
 
-    public Long getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

@@ -1,0 +1,472 @@
+# this is an API spec of Coremail in YAML
+swagger: '2.0'
+info:
+  title: dago API
+  description: |
+
+
+
+  contact:
+    name: More
+    email: morezzww@gmail.com
+  version: "1.0.0"
+
+# 这里的 tags 定义后依然是无序的
+tags:
+  - name: "User"
+    description: "User API"
+  - name: "Kind"
+    description: "Kind API"
+  - name: "Product"
+    description: "Product API"
+  - name: "Stock"
+    description: "Stock API"
+  - name: "Order"
+    description: "Order API"
+  - name: "OrderItem"
+    description: "OrderItem API"
+# 域名
+# API 支持的协议方式
+schemes:
+  - http
+  - https
+# api 基础路径
+basePath: /dago/rest/v1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+
+#   用户
+
+  /user/{user_id}:
+    get:
+      summary: 获取用户信息
+      description: |
+        获取用户信息
+      parameters:
+        - name: user_id
+          in: path
+          description: 用户Id
+          type: integer
+          format: integer
+          required: true
+      tags:
+        -  User
+      responses:
+        200:
+         description: 状态码和用户信息
+         schema:
+           $ref: '#/definitions/APIResult'
+      security:
+        - access_token: []
+
+# product
+  /product:
+    $ref: './product.yaml#createProduct'
+  /product:search:
+    $ref: './product.yaml#searchProduct'
+
+#  # 用户
+#  /region/{region_id}/user:search:
+#    $ref: './user.yaml#searchUser'
+#  /region/{region_id}/user/{user_at_domain}:getAttrs:
+#    $ref: './user.yaml#getUser'
+#  /region/{region_id}/user/{user_id}:
+#    $ref: './user.yaml#createUser'
+#  /region/{region_id}/user/{user_at_domain}:
+#    $ref: './user.yaml#User'
+#  /region/{region_id}/user/{user_at_domain}/alias:
+#    $ref: './user.yaml#getAlias'
+#  /region/{region_id}/user/{user_at_domain}/alias/{alias_user_at_domain}:
+#    $ref: './user.yaml#UserAlias'
+#  /region/{region_id}/user/{user_at_domain}:auth:
+#    $ref: './user.yaml#authUser'
+#  /region/{region_id}/user/{user_at_domain}:login:
+#    $ref: './user.yaml#userLogin'
+#
+#  # 组织
+#  /region/{region_id}/org/{org_id}:getAttrs:
+#    $ref: './org.yaml#getOrg'
+#  /region/{region_id}/org/{org_id}:hierarchy:
+#    $ref: './org.yaml#getHierarchy'
+#  /region/{region_id}/org/{org_id}/domain/{domain_name}:
+#    $ref: './org.yaml#OrgDomain'
+#
+#
+#  # 部门
+#  /region/{region_id}/org/{org_id}/ou/{org_unit_id}:getAttrs:
+#    $ref: './ou.yaml#getOrgUnit'
+#  /region/{region_id}/org/{org_id}/ou/{org_unit_id}:
+#    $ref: './ou.yaml#OrgUnit'
+#
+#  # 域名
+#  /region/{region_id}/domain:
+#    $ref: './domain.yaml#listDomain'
+#  /region/{region_id}/domain/{domain_name}:
+#    $ref: './domain.yaml#Domain'
+#  /region/{region_id}/domain/{domain_name}/alias:
+#    $ref: './domain.yaml#getDomainAlias'
+#  /region/{region_id}/domain/{domain_name}/alias/{domain_name_alias}:
+#    $ref: './domain.yaml#DomainAlias'
+#  /region/{region_id}/domain/{domain_name}:exist:
+#    $ref: './domain.yaml#domainExist'
+#
+#
+#  # 会话
+#  /region/{region_id}/session/{ses_id}:checkTimeout:
+#    $ref: './session.yaml#checkTimeout'
+#  /region/{region_id}/session/{ses_id}:refresh:
+#    $ref: './session.yaml#refreshSession'
+#  /region/{region_id}/session/{ses_id}:getAttrs:
+#    $ref: './session.yaml#getSessionAttrs'
+#  /region/{region_id}/session/{ses_id}:setAttrs:
+#    $ref: './session.yaml#setSessionAttrs'
+#
+# # 联系人
+#  /region/{region_id}/object:search:
+#    $ref: './obj.yaml#listObject'
+#  /region/{region_id}/object/{obj_uid}:
+#    $ref: './obj.yaml#Object'
+#  /region/{region_id}/object/{obj_uid}:getAttrs:
+#    $ref: './obj.yaml#getObjectAttrs'
+#  /region/{region_id}/object:
+#    $ref: './obj.yaml#createObject'
+
+
+securityDefinitions:
+  access_token:
+    type: apiKey
+    name: ACCESS-TOKEN
+    in: header
+
+definitions:
+
+  code:
+    type: string
+
+    description: |
+      返回码   说明   <br>
+      0   操作成功/正常返回 <br>
+      -1  操作失败/未知/系统错误 <br>
+      8   用户已存在 <br>
+      9   非法用户名 <br>
+      19  用户不存在 <br>
+      20  域名不存在 <br>
+      28  Session ID 不存在/已经  <br>
+      35  密码错误 <br>
+      39  参数错误 <br>
+      42  数据库访问异常 <br>
+      43  UD 错误 - 非法属性 <br>
+      44  UD 错误 - MBOX 已经存在 <br>
+      45  UD 错误 - MBOX 不存在 <br>
+      47  分配错误，比如COS数量不足，邮箱容量不  <br>
+      48  Session 操作异常 <br>
+      49  域名已存在 <br>
+      50  COS ID 或名称不存在 <br>
+      51  组织不存在 <br>
+      52  组织已被禁用 <br>
+      55  因COS限制，无法创建更多的别名 <br>
+      56  因邮件地址冲突，无法创建别名 <br>
+      59  用户数已超出 License 限制 <br>
+      60  License 已经过期 <br>
+      61  域名个数已超出 License 限制 <br>
+      62  组织个数已超出 License 限制 <br>
+      63  部门不存在 <br>
+      72  用户设置了自锁定 <br>
+      78  COS 不存在 <br>
+      79  联系人不存在 <br>
+      83  指定的 MID 不存在 <br>
+
+    enum:
+      - 0
+      - -1
+      - 8
+      - 9
+      - 19
+      - 20
+      - 28
+      - 35
+      - 39
+      - 42
+      - 43
+      - 44
+      - 45
+      - 47
+      - 48
+      - 49
+      - 50
+      - 51
+      - 52
+      - 55
+      - 56
+      - 59
+      - 60
+      - 61
+      - 62
+      - 63
+      - 72
+      - 78
+      - 79
+      - 83
+
+  OrgInfo:
+    type: object
+    properties:
+      org_id:
+        type: string
+        description: 组织ID, 可能是数字或字符串，一般会采用域名作为组织id
+      org_name:
+        type: string
+        description: 组织名称
+      org_status:
+        type: string
+        description: 组织状态（0正常1暂停2锁定）
+        enum:
+          - 0
+          - 1
+          - 2
+      org_address:
+        type: string
+        description: 地址
+      org_cos_info:
+        type: object
+        description: |
+            * 组织可用的服务等级信息，服务等级：指定用户邮箱的使用的服务基本情况（邮箱容量等）
+            * 创建用户的时候可以指定 cos_id, 即分配某个用户固定的服务等级，如果不传 cos_id ， 系统会自动分配给用户一个服务等级。
+            * 存在多服务等级的组织，创建用户的时候建议指定该参数。
+            * 数据样本: {"1":"默认服务等级","2":"学生服务等级"}, key为服务等级id,value为服务等级名称
+
+  OrgUnitInfo:
+    type: object
+    properties:
+      org_unit_id:
+        type: string
+        description: 部门ID
+      org_unit_name:
+        type: string
+        description: 部门名称
+      org_id:
+        type: string
+        description: 部门所属的组织ID
+      parent_org_unit_id:
+        type: string
+        description: 上级部门ID
+
+  GroupInfoForAdd:
+    type: object
+    properties:
+      password:
+        type: string
+        description: 密码
+      maillist:
+        type: string
+        description: 邮件列表
+
+#  GroupInfoForAddByDynamic:
+#    type: object
+#    properties:
+#      password:
+#        type: string
+#        description: 密码
+#      includelist:
+#        type: string
+#        description: 邮件列表
+
+  GroupInfoForCreate:
+    type: object
+    properties:
+      true_name:
+        type: string
+        description: 邮件列表名称
+      org_unit_id:
+        type: string
+        description: 部门Id
+      forwardmaillist:
+        type: string
+        description: 列表成员 (静态), 逗号分隔的邮件地址
+      subscriber_filter:
+        type: string
+        description: 订阅设置, 支持的字段有org_id,ou_id,email,= 表示值等于, ~= 表示值为通配符, 支持一键多值  例如org_id~=a*&org_unit_id=test&email=test*,a*@coremail.cn
+      entrust_manager:
+        type: string
+        description: 委托管理员, 委托管理员只能是站内用户, 如无指定, 必须填入 2 个英文逗号, 如 \",,\"
+      maillist_errorto:
+        type: string
+        description: 退信接收地址列表
+      user_status:
+        type: string
+        description: 用户状态 0:正常 1:停用
+        enum:
+        - 0
+        - 1
+      cos_id:
+        type: string
+        description: 邮箱列表等级，默认为3
+        enum:
+        - "3"
+      junkfilter:
+        type: string
+        description: 允许谁发往此列表, 0:允许所有人 2:允许列表中及指定授权用户 3:只允许指定授权用户
+        enum:
+        - 0
+        - 2
+        - 3
+      forwardactive:
+        type: string
+        desciption: 自动转发, 此属性必须置1, 打开转发功能
+        enum:
+        - 1
+      keeplocal:
+        type: string
+        description: 此属性必须置0, 表示转发后不保留本地副本
+        enum:
+        - 0
+      rejectjunk:
+        type: string
+        description: 对垃圾邮件的处理方式, 此属性必须置为1, 拒收所有未被允许的用户发过来的邮件
+        enum:
+        - 1
+      safelist:
+        type: string
+        description: 授权使用者,逗号分隔的邮件地址
+      refuselist:
+        type: string
+        description: 禁止使用者,逗号分隔的邮件地址
+
+  GroupInfoForUpdate:
+    type: object
+    properties:
+      true_name:
+        type: string
+        description: 邮件列表名称
+      org_unit_id:
+        type: string
+        description: 部门Id
+      forwardmaillist:
+        type: string
+        description: 列表成员 (静态), 逗号分隔的邮件地址
+      subscriber_filter:
+        type: string
+        description: 订阅设置, 支持的字段有org_id,ou_id,email,= 表示值等于, ~= 表示值为通配符, 支持一键多值  例如org_id~=a*&org_unit_id=test&email=test*,a*@coremail.cn
+      entrust_manager:
+        type: string
+        description: 委托管理员, 委托管理员只能是站内用户
+      maillist_errorto:
+        type: string
+        description: 退信接收地址列表
+      user_status:
+        type: string
+        description: 用户状态 0:正常 1:停用
+        enum:
+        - 0
+        - 1
+      junkfilter:
+        type: string
+        description: 允许谁发往此列表, 0:允许所有人 2:允许列表中及指定授权用户 3:只允许指定授权用户
+        enum:
+        - 0
+        - 2
+        - 3
+      forwardactive:
+        type: string
+        desciption: 自动转发, 此属性必须置1, 打开转发功能
+        enum:
+        - 1
+      keeplocal:
+        type: string
+        description: 此属性必须置0, 表示转发后不保留本地副本
+        enum:
+        - 0
+      rejectjunk:
+        type: string
+        description: 对垃圾邮件的处理方式, 此属性必须置为1, 拒收所有未被允许的用户发过来的邮件
+        enum:
+        - 1
+      safelist:
+        type: string
+        description: 授权使用者,逗号分隔的邮件地址
+      refuselist:
+        type: string
+        description: 禁止使用者,逗号分隔的邮件地址
+
+  APIResult:
+    type: object
+    required:
+    - code
+    properties:
+      code:
+        type: integer
+        description: 返回码,0代表调用成功，更多的错误码描述，可以访问 /dict ，展示所有的错误码描述
+      message:
+        type: string
+        description: 错误描述信息
+      result:
+        type: object
+        description: 具体的返回数据，一个 json 对象
+
+  FolderInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 文件夹id
+        name:
+          type: string
+          description: 文件夹名称
+        msgcnt:
+          type: integer
+          description: 信件总数
+        msgsize:
+          type: integer
+          description: 信件总数占用空间大小(单位：字节)
+        newmsgcnt:
+          type: integer
+          description: 未读信件总数
+        newmsgsize:
+          type: integer
+          description: 未读信件总数占用空间大小(单位：字节)
+
+
+  ObjectInfoForCreate:
+    type: object
+    properties:
+      true_name:
+        type: string
+        description: 真实姓名
+      gender:
+        type: string
+        description: 性别 0:男 1:女
+        enum:
+          - "0"
+          - "1"
+
+  ObjectInfoForUpdate:
+    type: object
+    required:
+    - org_id
+    properties:
+      true_name:
+        type: string
+        description: 真实姓名
+      gender:
+        type: string
+        description: 性别 0:男 1:女
+        enum:
+          - "0"
+          - "1"
+      org_id:
+        type: string
+        description: 归属组织
+      org_unit_id:
+        type: string
+        description: 归属部门
+      privacy_level:
+        type: string
+        description: 外部联系人公开等级：2 表示组织内公开, 4 表示全站公开，不支持其他数字
+        enum:
+          - "2"
+          - "4"
+
+

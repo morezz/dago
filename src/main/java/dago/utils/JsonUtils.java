@@ -1,14 +1,19 @@
 package dago.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +35,6 @@ public abstract class JsonUtils {
     /**
      * @param json    example {"root":{"code":"x", result:"x"}}、{"root":{"code":{"a":"x", "b":"y"}, result:"x"}}......
      * @param pattern example root/code root/result ......
-     *
      * @return
      */
     private static JsonElement resultEle(String json, String pattern) {
@@ -188,7 +192,7 @@ public abstract class JsonUtils {
         List<String> liststr = getAsStringList(json, pattern);
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         for (String childJson : liststr) {
-            result.add(json2Map(childJson));
+            result.add(json2StringMap(childJson));
         }
         return result;
     }
@@ -255,7 +259,7 @@ public abstract class JsonUtils {
         return gson.toJson(obj);
     }
 
-    public static Map<String, String> json2Map(String json) {
+    public static Map<String, String> json2StringMap(String json) {
         Gson gson = new Gson();
         Map<String, String> result = gson.fromJson(json, new TypeToken<Map<String, String>>() {
         }.getType());
@@ -267,5 +271,22 @@ public abstract class JsonUtils {
         JsonElement je = parser.parse(httpEntity);
         return je.getAsJsonObject();
     }
+
+    public static Map<String, Object> json2SObjectMap(String json) {
+        Gson gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Double.class, new JsonSerializer<Double>() {
+
+            @Override
+            public JsonElement serialize(Double src, Type typeOfSrc, JsonSerializationContext context) {
+                if (src == src.longValue()) {
+                    return new JsonPrimitive(src.longValue());
+                }
+                return new JsonPrimitive(src);
+            }
+        }).create();
+        Map<String, Object> result = gson.fromJson(json, new TypeToken<Map<String, Object>>() {
+        }.getType());
+        return result;
+    }
+
 
 }

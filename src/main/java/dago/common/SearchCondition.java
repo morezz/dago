@@ -13,12 +13,17 @@ import java.util.List;
 
 public class SearchCondition {
 
+
+    private Integer size;
+    private Integer page;
     private String sort;
     private String order;
     private List<String> returnAttrs;
     private List<Condition> conditionList;
 
     public SearchCondition(String json) {
+        this.sort = JsonUtils.getAsString(json, "size");
+        this.sort = JsonUtils.getAsString(json, "page");
         this.sort = JsonUtils.getAsString(json, "sort");
         this.order = JsonUtils.getAsString(json, "order");
         this.returnAttrs = JsonUtils.getAsStringList(json, "returnAttrs");
