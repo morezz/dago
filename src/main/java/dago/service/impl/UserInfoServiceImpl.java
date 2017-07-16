@@ -69,8 +69,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     @SuppressWarnings("unchecked")
     public ServiceResult search(Integer page, Integer size, SearchCondition searchCondition, List<String> returnAttrs) {
-        LOGGER.debug("userInfo search, page: {}, size: {}, searchCondition: {}, returnAttrs: {}", page, size,
-                searchCondition, returnAttrs);
+//        LOGGER.debug("userInfo search, page: {}, size: {}, searchCondition: {}, returnAttrs: {}", page, size,
+//                searchCondition, returnAttrs);
 
         Specification specification = new CustomSpecification(searchCondition);
 
@@ -85,5 +85,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         resultMap.put("total", resultList.size());
         return ServiceResult.successResult(resultMap);
 
+    }
+
+    public UserInfo findByUsername(String username) {
+        return userInfoRepository.findByUsername(username);
     }
 }

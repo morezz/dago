@@ -17,6 +17,8 @@
 
     <import resource="datasource.xml"/>
     <import resource="cxf-bean.xml"/>
+    <import resource="redis-bean.xml"/>
+    <import resource="shiro-bean.xml"/>
 
     <jpa:repositories base-package="dago.repository"
                       transaction-manager-ref="transactionManager"
@@ -29,8 +31,9 @@
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="MYSQL"/>
                 <property name="generateDdl" value="false"/>
-                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
                 <property name="showSql" value="false"/>
+
             </bean>
         </property>
     </bean>

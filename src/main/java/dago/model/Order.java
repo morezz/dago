@@ -20,7 +20,7 @@ import java.util.Date;
 public class Order {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "order_number")
     private String orderNum;    // 订单号

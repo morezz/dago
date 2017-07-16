@@ -1,13 +1,25 @@
 package dago.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * UserInfo
@@ -18,14 +30,24 @@ import java.util.Date;
 
 @Table(name = "user_info")
 @Entity
-public class UserInfo {
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+
+
+//@ToString(exclude = {"roleList"})
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserInfo implements Serializable {
+
+    private static final long serialVersionUID = 895922977663522702L;
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
+    @Column(name = "password")
+    private String password;
     @Column(name = "union_id")
     private String unionId;
     @Column(name = "open_id")
@@ -54,6 +76,10 @@ public class UserInfo {
     @Column(name = "remark")
     private String remark;
 
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "userInfoList", fetch = FetchType.LAZY)
+    private List<Role> roleList;
+
+
     public Long getId() {
         return id;
     }
@@ -68,6 +94,15 @@ public class UserInfo {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @JsonIgnore    //生成json不包含此字段,必须打在Getter上面
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUnionId() {
@@ -172,5 +207,14 @@ public class UserInfo {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    @JsonIgnore    //生成json不包含此字段
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
     }
 }

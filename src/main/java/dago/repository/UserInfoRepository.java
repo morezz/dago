@@ -10,4 +10,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author <a href="mailto:morezzww@gmail.com">More</a>
  */
 public interface UserInfoRepository extends JpaRepository<UserInfo, Long>, JpaSpecificationExecutor<UserInfo> {
+
+    UserInfo findByUsername(String username);
 }

@@ -6,6 +6,7 @@ import dago.parameter.annotation.API;
 import dago.parameter.annotation.APIParam;
 import dago.result.ResourceResult;
 import org.apache.cxf.jaxrs.ext.PATCH;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,8 +29,8 @@ public interface ProductInfoResource {
     @Path("/product")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @API(authorizeType = API.AuthorizeType.ADMIN_ROLE,
-            params = {
+    @RequiresRoles("admin")
+    @API(params = {
                     @APIParam(name = "name", from = APIParam.FROM.BODY),
                     @APIParam(name = "description", from = APIParam.FROM.BODY),
                     @APIParam(name = "price", from = APIParam.FROM.BODY),
